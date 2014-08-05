@@ -1,5 +1,6 @@
 package io.appium.android.bootstrap.handler;
 
+import android.text.method.Touch;
 import com.android.uiautomator.core.UiObjectNotFoundException;
 import io.appium.android.bootstrap.*;
 import org.json.JSONException;
@@ -9,7 +10,10 @@ import java.lang.reflect.Method;
 import android.graphics.Rect;
 import com.android.uiautomator.common.ReflectionUtils;
 import com.android.uiautomator.core.UiObject;
-import com.android.uiautomator.core.UiSelector;
+import android.view.InputEvent;
+import android.view.InputDevice;
+import android.view.KeyCharacterMap;
+
 
 
 
@@ -43,17 +47,29 @@ public class Clear extends CommandHandler {
         final AndroidElement el = command.getElement();
         final ReflectionUtils utils = new ReflectionUtils();
         Rect rect = el.getVisibleBounds();
+        TouchLongClick.correctLongClick(rect.right + 20, rect.centerY(),1000);
         // Trying to select entire text.
-        TouchLongClick.correctLongClick(rect.left + 20, rect.centerY(),2000);
-        UiObject selectAll = new UiObject(new UiSelector().descriptionContains("Select all"));
-        if (selectAll.waitForExists(2000)) {
-            selectAll.click();
-        }
-        // wait for the selection
-        SystemClock.sleep(500);
+
         // delete it
-        final Method sendKey = utils.getControllerMethod("sendKey", int.class,int.class);
-        sendKey.invoke(utils.getController(), KeyEvent.KEYCODE_DEL, 0);
+        final long eventTime = SystemClock.uptimeMillis();
+        KeyEvent downEvent = new KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN,
+                KeyEvent.KEYCODE_DEL, 0, 0, KeyCharacterMap.VIRTUAL_KEYBOARD, 0, 0,
+                InputDevice.SOURCE_KEYBOARD);
+
+
+        final Method injectInputEvent = utils.getBridgeMethod("injectInputEvent", InputEvent.class,
+              boolean.class);
+
+
+        //injectInputEvent(downEvent,false);
+        // final Method sendKey = utils.getControllerMethod("sendKey", int.class,int.class);
+        int count = 0;
+        while (count < 50) {
+           //sendKey.invoke(utils.getController(), KeyEvent.KEYCODE_DEL, 0);
+            injectInputEvent.invoke(utils.getBridge(), downEvent, false);
+            count++;
+        }
+
         // If still text exist falling back on UIautomator clearText.
         if (!el.getText().isEmpty()) {
            Logger.debug("Clearing text not successful falling back to UiAutomator method clear");
@@ -64,6 +80,7 @@ public class Clear extends CommandHandler {
         return new AndroidCommandResult(WDStatus.NO_SUCH_ELEMENT,
             e.getMessage());
       } catch (final Exception e) { // handle NullPointerException
+          Logger.debug(e.toString());
         return getErrorResult("Unknown error clearing text");
       }
     }
