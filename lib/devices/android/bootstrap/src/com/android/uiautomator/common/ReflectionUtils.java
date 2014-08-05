@@ -2,7 +2,7 @@ package com.android.uiautomator.common;
 
 import com.android.uiautomator.core.UiDevice;
 import io.appium.android.bootstrap.Logger;
-
+import android.view.InputEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -39,22 +39,28 @@ public class ReflectionUtils {
    * getAutomatorBridge is private so we access the bridge via reflection to use
    * the touchDown / touchUp / touchMove methods.
    */
-  public Object getController() throws IllegalArgumentException,
-       SecurityException {
+  public Object getController() {
     return controller;
   }
 
-  public Object getBridge() { return bridge; }
+  public Object getBridge() {
+    return bridge;
+  }
 
   public Method getControllerMethod(final String name, final Class<?>... parameterTypes)
       throws NoSuchMethodException, SecurityException {
     return getMethod(controller.getClass(), name, parameterTypes);
   }
 
-   public Method getBridgeMethod(final String name, final Class<?>... parameterTypes)
-           throws NoSuchMethodException, SecurityException {
-     return getMethod(bridge.getClass(), name, parameterTypes);
-   }
+  public Method getMethodInjectInputEvent() throws NoSuchMethodException, SecurityException {
+    Class bridgeClass = bridge.getClass();
+
+    if (API_18) {
+      bridgeClass = bridgeClass.getSuperclass();
+    }
+
+    return getMethod(bridgeClass, "injectInputEvent", InputEvent.class, boolean.class);
+  }
 
   public Method getMethod(final Class clazz, String name, final Class<?>... parameterTypes)
       throws NoSuchMethodException, SecurityException {

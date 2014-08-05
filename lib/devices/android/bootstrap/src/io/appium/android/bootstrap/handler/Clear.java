@@ -57,9 +57,9 @@ public class Clear extends CommandHandler {
                 InputDevice.SOURCE_KEYBOARD);
 
 
-        final Method injectInputEvent = utils.getBridgeMethod("injectInputEvent", InputEvent.class,
-              boolean.class);
+        final Method injectInputEvent = utils.getMethodInjectInputEvent();
 
+        Logger.debug("~~~~~~~~~~~~~~~~~~ method found: " + injectInputEvent.toString());
 
         //injectInputEvent(downEvent,false);
         // final Method sendKey = utils.getControllerMethod("sendKey", int.class,int.class);
