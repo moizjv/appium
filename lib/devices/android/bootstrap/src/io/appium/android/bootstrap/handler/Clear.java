@@ -83,6 +83,8 @@ public class Clear extends CommandHandler {
            Logger.debug("Clearing text not successful falling back to UiAutomator method clear");
            el.clearText();
         }
+        Logger.debug("Text present after all attempts : " + el.getText());
+        Logger.debug("isEmpty : " + el.getText().isEmpty());
         // If clear text is still unsuccessful throwing error back
         if (!el.getText().isEmpty()) {
             return getErrorResult("Clear text not successful.");
