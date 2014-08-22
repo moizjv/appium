@@ -24,4 +24,4 @@ git:
 script:
 #- "./ci/script.sh"
 #- bash -c 'while true; do ping ondemand.saucelabs.com &> /dev/null; sleep 10; done' &
-- ./ci/update_appium.io.sh
+- ./ci/update_appium_io.sh
