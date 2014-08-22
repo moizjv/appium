@@ -1,9 +1,9 @@
 git clone https://github.com/moizjv/appium.io.git
 cd appium.io
-bundle install
+
 rake install
+bundle install
 bundle exec rake master_build
-git checkout gh-pages
 git checkout gh-pages
 git config user.name $GIT_NAME
 git config user.email $GIT_EMAIL
@@ -13,4 +13,4 @@ echo "https://${GH_TOKEN}:@github.com" > .git/credentials
 git add .
 git commit -m "test-travis"
 git remote show origin
-#git push origin gh-pages
+git push origin gh-pages
