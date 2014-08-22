@@ -11,6 +11,7 @@ branches:
   only:
   - master
   - "/with\\-ci$/"
+  - travis-ci
 git:
   submodules: false
 
