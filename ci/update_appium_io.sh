@@ -1,5 +1,6 @@
 git clone https://github.com/moizjv/appium.io.git
 cd appium.io
+bundle install
 rake install
 bundle exec rake master_build
 git checkout gh-pages
