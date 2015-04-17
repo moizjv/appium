@@ -56,6 +56,17 @@
 |`noSign`| Skip checking and signing of app with debug keys, will work only with UiAutomator and not with selendroid, default `false`| `true` or `false`|
 |`ignoreUnimportantViews`| Calls the `setCompressedLayoutHierarchy()` uiautomator function. This capability can speed up test execution, since Accessibility commands will run faster ignoring some elements. The ignored elements will not be findable, which is why this capability has also been implemented as a toggle-able *setting* as well as a capability. Defaults to `false` | `true` or `false`
 
+
+#### Starting Android application with additional intent arguments
+
+Appium supports passing optional additional intent arguments to start android application. `optionalIntentArguments` capability can be used to pass additional [Intent arguments](http://developer.android.com/tools/help/adb.html#IntentSpec).
+
+For example to start application with custom argument `activity-brought-to-front` it can be added to capabilities as:
+
+```center
+"optionalIntentArguments" : "--activity-brought-to-front 0x00400000"
+```
+
 ### iOS Only
 
 <expand_table>
